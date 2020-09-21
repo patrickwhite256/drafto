@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package patrickwhite256.drafto;
+
+option go_package = "github.com/patrickwhite256/drafto/rpc/drafto";
+
+service Drafto {
+  rpc NewDraft(NewDraftReq) returns (NewDraftResp);
+  rpc GetSeat(GetSeatReq) returns (GetSeatResp);
+  rpc MakeSelection(MakeSelectionReq) returns (MakeSelectionResp);
+  rpc GetDraftStatus(GetDraftStatusReq) returns (GetDraftStatusResp);
+}
+
+///
+
+enum Colour {
+  WHITE = 0;
+  BLUE  = 1;
+  BLACK = 2;
+  RED   = 3;
+  GREEN = 4;
+}
+
+enum Rarity {
+  BASIC    = 0;
+  COMMON   = 1;
+  UNCOMMON = 2;
+  RARE     = 3;
+  MYTHIC   = 4;
+}
+
+message Pack {
+  string id = 1;
+  repeated Card cards = 2;
+}
+
+message Card {
+  string id = 1;
+  string name = 2;
+  string image_url = 3;
+  repeated Colour colours = 4;
+  Rarity rarity = 5;
+  bool foil = 6;
+  bool dfc = 7;
+}
+
+///
+
+message NewDraftReq {
+  string set_code = 1;
+}
+
+message NewDraftResp {
+  string table_id = 1;
+  repeated string seat_ids = 2;
+}
+
+message GetSeatReq {
+  string seat_id = 1;
+}
+
+message GetSeatResp {
+  string seat_id = 1;
+  Pack current_pack = 2;
+  repeated Card pool = 3;
+}
+
+message MakeSelectionReq {
+  string seat_id = 1;
+  string card_id = 2;
+}
+
+message MakeSelectionResp {
+  string seat_id = 1;
+}
+
+message GetDraftStatusReq {
+  string table_id = 1;
+}
+
+message GetDraftStatusResp {
+  string table_id = 1;
+  int32 current_pack = 2;
+  repeated SeatData seats = 3;
+}
+
+message SeatData {
+  string seat_id = 1;
+  int32 n_packs = 2;
+  int32 n_cards = 3;
+  repeated Card pool_revealed_cards = 4;
+  repeated Card pack_revealed_cards = 5;
+}
