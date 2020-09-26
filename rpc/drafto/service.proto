@@ -86,8 +86,8 @@ message GetDraftStatusResp {
 
 message SeatData {
   string seat_id = 1;
-  int32 n_packs = 2;
-  int32 n_cards = 3;
+  int32 pack_count = 2;
+  int32 pool_count = 3;
   repeated Card pool_revealed_cards = 4;
   repeated Card pack_revealed_cards = 5;
 }

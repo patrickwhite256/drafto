@@ -40,7 +40,7 @@ var (
 //
 // The special rules for the following sets are implemented:
 // - ZNR: A DFC replaces one card of the appropriate rarity.
-func (g *Generator) GenerateStandardPack(ctx context.Context, setCode string) (*drafto.Pack, error) {
+func (g *CardLoader) GenerateStandardPack(ctx context.Context, setCode string) (*drafto.Pack, error) {
 	set, err := g.loadSet(setCode)
 	if err != nil {
 		return nil, fmt.Errorf("error loading set %s: %w", setCode, err)

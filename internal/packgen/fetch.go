@@ -106,7 +106,7 @@ type scryfallSearchResponse struct {
 	NextPageURL string          `json:"next_page"`
 }
 
-func (s *cardSet) addScryfallCard(scryCard *scryfallCard) {
+func (s *cardSet) addScryfallCard(scryCard *scryfallCard) *drafto.Card {
 	if s.releaseDate.IsZero() {
 		var err error
 		if s.releaseDate, err = time.Parse(scryfallDateFormat, scryCard.ReleaseDate); err != nil {
@@ -131,6 +131,8 @@ func (s *cardSet) addScryfallCard(scryCard *scryfallCard) {
 	}
 
 	s.cardsByID[card.Id] = card
+
+	return card
 }
 
 func scryfallSetSearchURL(setCode string) string {
@@ -162,9 +164,10 @@ func getScryfallPage(url string) (*scryfallSearchResponse, error) {
 	return scryResp, nil
 }
 
-func (g *Generator) loadSet(setCode string) (*cardSet, error) {
+func (g *CardLoader) loadSet(setCode string) (*cardSet, error) {
 	if g.standardSets == nil {
 		g.standardSets = map[string]*cardSet{}
+		g.allCards = map[string]*drafto.Card{}
 	}
 
 	if set, ok := g.standardSets[setCode]; ok {
@@ -190,7 +193,8 @@ func (g *Generator) loadSet(setCode string) (*cardSet, error) {
 		}
 
 		for _, scryCard := range scryResp.Data {
-			set.addScryfallCard(scryCard)
+			card := set.addScryfallCard(scryCard)
+			g.allCards[card.Id] = card
 		}
 
 		url = scryResp.NextPageURL
