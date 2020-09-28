@@ -284,7 +284,7 @@ func (d *Datastore) MovePackToSeat(ctx context.Context, packID, oldSeatID, newSe
 
 	seat := &Seat{}
 
-	if err := d.loadItem(ctx, oldSeatID, seatTableName, seat); err != nil {
+	if err := d.loadItem(ctx, newSeatID, seatTableName, seat); err != nil {
 		return err
 	}
 

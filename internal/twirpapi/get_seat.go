@@ -2,6 +2,7 @@ package twirpapi
 
 import (
 	"context"
+	"log"
 
 	"github.com/twitchtv/twirp"
 
@@ -12,6 +13,7 @@ import (
 func (s *Server) GetSeat(ctx context.Context, req *drafto.GetSeatReq) (*drafto.GetSeatResp, error) {
 	seat, err := s.Datastore.GetSeat(ctx, req.SeatId)
 	if err != nil {
+		log.Println(err)
 		return nil, twirp.InternalError("error loading seat")
 	}
 
@@ -22,6 +24,7 @@ func (s *Server) GetSeat(ctx context.Context, req *drafto.GetSeatReq) (*drafto.G
 	if len(seat.PackIDs) > 0 {
 		pack, err := s.Datastore.GetPack(ctx, seat.PackIDs[0])
 		if err != nil {
+			log.Println(err)
 			return nil, twirp.InternalError("error loading current pack")
 		}
 

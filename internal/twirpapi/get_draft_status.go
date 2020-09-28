@@ -2,6 +2,7 @@ package twirpapi
 
 import (
 	"context"
+	"log"
 
 	"github.com/twitchtv/twirp"
 
@@ -11,6 +12,7 @@ import (
 func (s *Server) GetDraftStatus(ctx context.Context, req *drafto.GetDraftStatusReq) (*drafto.GetDraftStatusResp, error) {
 	table, err := s.Datastore.GetTable(ctx, req.TableId)
 	if err != nil {
+		log.Println(err)
 		return nil, twirp.InternalError("failed to load table")
 	}
 
@@ -32,6 +34,7 @@ func (s *Server) GetDraftStatus(ctx context.Context, req *drafto.GetDraftStatusR
 		if len(seat.PackIDs) > 0 {
 			pack, err := s.Datastore.GetPack(ctx, seat.PackIDs[0])
 			if err != nil {
+				log.Println(err)
 				return nil, twirp.InternalError("error loading pack")
 			}
 

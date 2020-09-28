@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/patrickwhite256/drafto/rpc/drafto"
@@ -165,6 +166,7 @@ func getScryfallPage(url string) (*scryfallSearchResponse, error) {
 }
 
 func (g *CardLoader) loadSet(setCode string) (*cardSet, error) {
+	setCode = strings.ToLower(setCode)
 	if g.standardSets == nil {
 		g.standardSets = map[string]*cardSet{}
 		g.allCards = map[string]*drafto.Card{}

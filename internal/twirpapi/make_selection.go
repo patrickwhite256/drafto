@@ -2,6 +2,7 @@ package twirpapi
 
 import (
 	"context"
+	"log"
 
 	"github.com/twitchtv/twirp"
 
@@ -14,15 +15,17 @@ const FinalPack = 2
 func (s *Server) MakeSelection(ctx context.Context, req *drafto.MakeSelectionReq) (*drafto.MakeSelectionResp, error) {
 	seat, err := s.Datastore.GetSeat(ctx, req.SeatId)
 	if err != nil {
+		log.Println(err)
 		return nil, twirp.InternalError("error loading seat")
 	}
 
-	if len(seat.PackIDs) > 0 {
+	if len(seat.PackIDs) == 0 {
 		return nil, twirp.NewError(twirp.InvalidArgument, "seat has no packs")
 	}
 
 	table, err := s.Datastore.GetTable(ctx, seat.TableID)
 	if err != nil {
+		log.Println(err)
 		return nil, twirp.InternalError("error loading table")
 	}
 
@@ -30,11 +33,13 @@ func (s *Server) MakeSelection(ctx context.Context, req *drafto.MakeSelectionReq
 
 	foil, pack, err := s.Datastore.RemoveCardFromPack(ctx, packID, req.CardId)
 	if err != nil {
+		log.Println(err)
 		return nil, twirp.InternalError("error picking card")
 	}
 
 	err = s.Datastore.AddCardToPool(ctx, req.SeatId, req.CardId, foil)
 	if err != nil {
+		log.Println(err)
 		return nil, twirp.InternalError("error adding card to pool")
 	}
 
@@ -44,6 +49,7 @@ func (s *Server) MakeSelection(ctx context.Context, req *drafto.MakeSelectionReq
 	if !pack.Empty() {
 		err = s.Datastore.MovePackToSeat(ctx, packID, req.SeatId, nextSeatID(table, req.SeatId))
 		if err != nil {
+			log.Println(err)
 			return nil, twirp.InternalError("error passing pack")
 		}
 

@@ -12,3 +12,8 @@ type CardLoader struct {
 func (g *CardLoader) CardByID(cardID string) *drafto.Card {
 	return copyOf(g.allCards[cardID])
 }
+
+func (g *CardLoader) PreloadSet(cardSet string) error {
+	_, err := g.loadSet(cardSet)
+	return err
+}
