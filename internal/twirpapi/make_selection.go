@@ -28,12 +28,12 @@ func (s *Server) MakeSelection(ctx context.Context, req *drafto.MakeSelectionReq
 
 	packID := seat.PackIDs[0]
 
-	card, pack, err := s.Datastore.RemoveCardFromPack(ctx, packID, req.CardId)
+	foil, pack, err := s.Datastore.RemoveCardFromPack(ctx, packID, req.CardId)
 	if err != nil {
 		return nil, twirp.InternalError("error picking card")
 	}
 
-	err = s.Datastore.AddCardToPool(ctx, req.SeatId, req.CardId, card.Foil)
+	err = s.Datastore.AddCardToPool(ctx, req.SeatId, req.CardId, foil)
 	if err != nil {
 		return nil, twirp.InternalError("error adding card to pool")
 	}
@@ -41,7 +41,7 @@ func (s *Server) MakeSelection(ctx context.Context, req *drafto.MakeSelectionReq
 	resp := &drafto.MakeSelectionResp{SeatId: seat.ID}
 
 	// if pack's not empty, pass it and return
-	if len(pack.FoilCardIDs)+len(pack.NonfoilCardIDs) > 0 {
+	if !pack.Empty() {
 		err = s.Datastore.MovePackToSeat(ctx, packID, req.SeatId, nextSeatID(table, req.SeatId))
 		if err != nil {
 			return nil, twirp.InternalError("error passing pack")

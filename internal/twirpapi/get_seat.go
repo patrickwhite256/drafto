@@ -9,7 +9,7 @@ import (
 	"github.com/patrickwhite256/drafto/rpc/drafto"
 )
 
-func (s *Server) GetSeat(ctx context.Context, req *drafto.GetSeatResp) (*drafto.GetSeatResp, error) {
+func (s *Server) GetSeat(ctx context.Context, req *drafto.GetSeatReq) (*drafto.GetSeatResp, error) {
 	seat, err := s.Datastore.GetSeat(ctx, req.SeatId)
 	if err != nil {
 		return nil, twirp.InternalError("error loading seat")
