@@ -2154,7 +2154,8 @@ proto.patrickwhite256.drafto.SeatData.toObject = function(includeInstance, msg) 
     poolRevealedCardsList: jspb.Message.toObjectList(msg.getPoolRevealedCardsList(),
     proto.patrickwhite256.drafto.Card.toObject, includeInstance),
     packRevealedCardsList: jspb.Message.toObjectList(msg.getPackRevealedCardsList(),
-    proto.patrickwhite256.drafto.Card.toObject, includeInstance)
+    proto.patrickwhite256.drafto.Card.toObject, includeInstance),
+    currentPackCount: jspb.Message.getFieldWithDefault(msg, 6, 0)
   };
 
   if (includeInstance) {
@@ -2212,6 +2213,10 @@ proto.patrickwhite256.drafto.SeatData.deserializeBinaryFromReader = function(msg
       var value = new proto.patrickwhite256.drafto.Card;
       reader.readMessage(value,proto.patrickwhite256.drafto.Card.deserializeBinaryFromReader);
       msg.addPackRevealedCards(value);
+      break;
+    case 6:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setCurrentPackCount(value);
       break;
     default:
       reader.skipField();
@@ -2277,6 +2282,13 @@ proto.patrickwhite256.drafto.SeatData.serializeBinaryToWriter = function(message
       5,
       f,
       proto.patrickwhite256.drafto.Card.serializeBinaryToWriter
+    );
+  }
+  f = message.getCurrentPackCount();
+  if (f !== 0) {
+    writer.writeInt32(
+      6,
+      f
     );
   }
 };
@@ -2409,6 +2421,24 @@ proto.patrickwhite256.drafto.SeatData.prototype.addPackRevealedCards = function(
  */
 proto.patrickwhite256.drafto.SeatData.prototype.clearPackRevealedCardsList = function() {
   return this.setPackRevealedCardsList([]);
+};
+
+
+/**
+ * optional int32 current_pack_count = 6;
+ * @return {number}
+ */
+proto.patrickwhite256.drafto.SeatData.prototype.getCurrentPackCount = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 6, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.patrickwhite256.drafto.SeatData} returns this
+ */
+proto.patrickwhite256.drafto.SeatData.prototype.setCurrentPackCount = function(value) {
+  return jspb.Message.setProto3IntField(this, 6, value);
 };
 
 
