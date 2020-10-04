@@ -80,7 +80,12 @@ func (s *Server) MakeSelection(ctx context.Context, req *drafto.MakeSelectionReq
 func nextSeatID(table *datastore.Table, seatID string) string {
 	for i, id := range table.SeatIDs {
 		if id == seatID {
-			return table.SeatIDs[(i+1)%len(table.SeatIDs)]
+			nextSeatIndex := (i + 1) % len(table.SeatIDs)
+			if table.CurrentPack%2 == 0 {
+				nextSeatIndex = (i - 1) % len(table.SeatIDs)
+			}
+
+			return table.SeatIDs[nextSeatIndex]
 		}
 	}
 
