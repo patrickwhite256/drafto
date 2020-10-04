@@ -23,8 +23,8 @@ Check out the feature wishlist below for what I want.
 
 For now, this is the plan. Obviously, I'd like there to be more, but this will do for now.
 
-- [ ] Dumb API - don't deal with any bad/malicious input (in progress)
-- [ ] Dumb webapp - barely functional
+- [x] Dumb API - don't deal with any bad/malicious input (in progress)
+- [x] Dumb webapp - barely functional
 - [ ] Tighten up API - handle bad input, log errors, etc
 - [ ] Add some dumb bots
 - [ ] Auth with discord
