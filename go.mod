@@ -5,6 +5,7 @@ go 1.15
 require (
 	github.com/aws/aws-sdk-go v1.34.32
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/go-bindata/go-bindata v3.1.2+incompatible
 	github.com/golang/protobuf v1.4.2
 	github.com/google/go-cmp v0.5.0 // indirect
 	github.com/google/uuid v1.1.2
