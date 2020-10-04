@@ -6,6 +6,8 @@ import (
 	"github.com/patrickwhite256/drafto/rpc/drafto"
 )
 
+// TODO: BUG: this can generate multiple dfcs per pack
+
 // znrDFCModifier enforces that a pack has exactly one nonfoil DFC.
 // - if the pack already has exactly one DFC, nothing will happen.
 // - if the pack has more than one nonfoil DFC, the highest-rarity nonfoil DFC will be kept and the others will be replaced with equivalent-rarity non-DFCs
@@ -39,13 +41,13 @@ func znrDFCModifier(set *cardSet, pack []*drafto.Card) {
 			continue
 		}
 
-		pack[idx] = set.randomZNRDFC(pack[idx].Rarity, pack)
+		pack[idx] = set.randomZNRSFC(pack[idx].Rarity, pack)
 	}
 }
 
 // randomZNRDFC returns a card of rarity `rarity`, that
 // is not a DFC, or any card already in `pack`, unless it is foil.
-func (s *cardSet) randomZNRDFC(rarity drafto.Rarity, pack []*drafto.Card) *drafto.Card {
+func (s *cardSet) randomZNRSFC(rarity drafto.Rarity, pack []*drafto.Card) *drafto.Card {
 	invalidIDSet := make(map[string]struct{}, len(pack))
 
 	for _, card := range pack {

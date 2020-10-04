@@ -12,7 +12,7 @@ function App() {
             <Switch>
               <Route path='/player/:id' component={PlayerView} />
               <Route path='/'>
-                <Link to='/player/asdf'>whoa</Link>
+                <Link to='/player/85e70549-2d17-418d-ae8b-8b332df752e6'>whoa</Link>
               </Route>
             </Switch>
         </header>

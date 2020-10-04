@@ -109,6 +109,20 @@ func (d *Datastore) NewTable(ctx context.Context, nSeats int, setCode string) (*
 	return table, nil
 }
 
+func (d *Datastore) IncrementTableCurrentPack(ctx context.Context, tableID string) error {
+	table := &Table{}
+
+	var err error
+
+	if err = d.loadItem(ctx, tableID, tableTableName, table); err != nil {
+		return err
+	}
+
+	table.CurrentPack++
+
+	return d.writeItem(ctx, table, tableTableName)
+}
+
 func (d *Datastore) GetTable(ctx context.Context, tableID string) (*Table, error) {
 	table := &Table{}
 
@@ -190,7 +204,17 @@ func (d *Datastore) GetSeats(ctx context.Context, seatIDs []string) ([]*Seat, er
 		return nil, fmt.Errorf("error unmarshalling seats: %w", err)
 	}
 
-	return seats, nil
+	seatsByID := map[string]*Seat{}
+	for _, seat := range seats {
+		seatsByID[seat.ID] = seat
+	}
+
+	retSeats := make([]*Seat, 0, len(seats))
+	for _, id := range seatIDs {
+		retSeats = append(retSeats, seatsByID[id])
+	}
+
+	return retSeats, nil
 }
 
 func (d *Datastore) AddCardToPool(ctx context.Context, seatID, cardID string, foil bool) error {
@@ -263,6 +287,7 @@ func (d *Datastore) RemoveCardFromPack(ctx context.Context, packID, cardID strin
 }
 
 // MovePackToSeat accepts unset `oldSeatID`
+// MovePackToSeat accepts unset `newSeatID`
 func (d *Datastore) MovePackToSeat(ctx context.Context, packID, oldSeatID, newSeatID string) error {
 	if oldSeatID != "" {
 		seat := &Seat{}
@@ -280,6 +305,10 @@ func (d *Datastore) MovePackToSeat(ctx context.Context, packID, oldSeatID, newSe
 		if err := d.writeItem(ctx, seat, seatTableName); err != nil {
 			return err
 		}
+	}
+
+	if newSeatID == "" {
+		return nil
 	}
 
 	seat := &Seat{}

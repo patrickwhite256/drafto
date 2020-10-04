@@ -52,11 +52,11 @@ class TableView extends Component {
     const nRows = Math.ceil(data.seatsList.length / 2);
     const rows = [];
     for (var i = 0; i < nRows; i++) {
-      const playerDivs = [<div style={{'float': 'left'}}><TablePlayer seatObj={data.seatsList[2*i]} /></div>];
+      const playerDivs = [<div style={{'float': 'left'}}><TablePlayer playerN={2*i+1} seatObj={data.seatsList[2*i]} /></div>];
       if (data.seatsList.length > 2*i) {
-        playerDivs.push(<div style={{'float': 'right'}}><TablePlayer seatObj={data.seatsList[2*i+1]} /></div>);
+        playerDivs.push(<div style={{'float': 'right'}}><TablePlayer playerN={2*i+2} seatObj={data.seatsList[2*i+1]} /></div>);
       }
-      rows.push(<div>{playerDivs}</div>);
+      rows.push(<div>{playerDivs}<div style={{clear:'both'}} /></div>);
     }
 
     return (
@@ -79,8 +79,8 @@ class TablePlayer extends Component {
     const stacks = [];
     for (i = 0; i < Math.ceil(poolCards.length / 10); i++) {
       const stackCards = [];
-      for (var j = 10 * i; j < poolCards.length && j < 10 * (i+1); i++) {
-        stackCards.push(poolCards[i]);
+      for (var j = 10 * i; j < poolCards.length && j < 10 * (i+1); j++) {
+        stackCards.push(poolCards[j]);
       }
       stacks.push(<CardStack cards={stackCards} scale={0.5} />);
     }
@@ -91,17 +91,20 @@ class TablePlayer extends Component {
       packCards.push(<Card cardObj={cardObj} revealed={true} scale={0.5} />);
     }
     for (i = 0; i < nPackUnrevealed; i++) {
-      poolCards.push(<Card revealed={false} scale={0.5}/>);
+      packCards.push(<Card revealed={false} scale={0.5}/>);
     }
 
     return (
-      <div>
-       <span className="player-pool">
-        {stacks}
-      </span>
-       <span className="player-pack">
-        <CardStack scale={0.5} horizontal={true} cards={poolCards} />
-      </span>
+      <div className="player-box">
+        <div>Player {this.props.playerN} - Current Packs: {this.props.seatObj.packCount}</div>
+        <span className="player-pool">
+          Pool:<br/>
+          {stacks}
+        </span>
+        <span className="player-pack">
+          Pack:<br/>
+          <CardStack scale={0.5} horizontal={true} cards={packCards} />
+        </span>
       </div>
     );
   }

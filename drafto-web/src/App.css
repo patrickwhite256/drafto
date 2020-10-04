@@ -11,6 +11,14 @@ body {
 .card {
   width:244px;
   height:340px;
+  position:relative;
+}
+
+.foil:before{
+  content:"";
+  display:block;
+  position:absolute;
+  background: rgba(255,255,255, 0.1);
 }
 
 .card-stack {
@@ -25,8 +33,16 @@ body {
 
 .player-pool{
   display:inline-block;
+  min-width:180px;
 }
 
 .player-pack{
   display:inline-block;
+  min-width:420px;
+}
+
+.player-box {
+  padding: 10px;
+  margin-top:5px;
+  border: 2px solid black;
 }

@@ -56,7 +56,13 @@ func (s *Server) MakeSelection(ctx context.Context, req *drafto.MakeSelectionReq
 		return resp, nil
 	}
 
-	// otherwise, check if the draft phase is done
+	// if pack is empty, clean it up
+	err = s.Datastore.MovePackToSeat(ctx, packID, req.SeatId, "")
+	if err != nil {
+		return nil, twirp.InternalError("error cleaning up empty pack")
+	}
+
+	// check if the draft phase is done
 	for _, seat := range table.Seats {
 		if seat.ID == req.SeatId {
 			if len(seat.PackIDs) > 1 { // table was loaded before pack was removed
@@ -73,6 +79,10 @@ func (s *Server) MakeSelection(ctx context.Context, req *drafto.MakeSelectionReq
 		return resp, nil
 	}
 
+	if err := s.Datastore.IncrementTableCurrentPack(ctx, table.ID); err != nil {
+		return nil, twirp.InternalError("error finishing draft phase")
+	}
+
 	return resp, s.distributeNewPacks(ctx, table)
 }
 
@@ -82,7 +92,7 @@ func nextSeatID(table *datastore.Table, seatID string) string {
 		if id == seatID {
 			nextSeatIndex := (i + 1) % len(table.SeatIDs)
 			if table.CurrentPack%2 == 0 {
-				nextSeatIndex = (i - 1) % len(table.SeatIDs)
+				nextSeatIndex = (i + len(table.SeatIDs) - 1) % len(table.SeatIDs)
 			}
 
 			return table.SeatIDs[nextSeatIndex]

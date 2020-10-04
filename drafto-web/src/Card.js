@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-
-const CARD_BACK_URL = 'https://c1.scryfall.com/file/scryfall-card-backs/normal/59/597b79b3-7d77-4261-871a-60dd17403388.jpg';
+import cardback from './cardback.jpg';
 
 class Card extends Component {
   constructor(props) {
@@ -16,10 +15,14 @@ class Card extends Component {
     const style = {'height': BASE_CARD_HEIGHT * this.scale, 'width': BASE_CARD_WIDTH * this.scale};
 
     if (this.props.revealed) {
-      return <img onClick={this.props.onClick} className='card' src={this.props.cardObj.imageUrl} alt={this.props.cardObj.Name} style={style} />
+      var spanClass ='';
+      if (this.props.cardObj.foil) {
+        spanClass='foil';
+      }
+      return <span className={spanClass}><img onClick={this.props.onClick} className='card' src={this.props.cardObj.imageUrl} alt={this.props.cardObj.Name} style={style} /></span>;
     }
 
-    return <img className='card' src={CARD_BACK_URL} alt='Unrevealed card' style={style} />
+    return <span><img className='card' src={cardback} alt='Unrevealed card' style={style} /></span>
   }
 }
 
