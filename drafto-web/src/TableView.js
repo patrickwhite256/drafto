@@ -13,6 +13,8 @@ class TableView extends Component {
       loaded: false,
       data: {},
     };
+
+    this.id = props.id;
   }
 
   componentDidMount() {
@@ -47,30 +49,27 @@ class TableView extends Component {
       return <div>Loading</div>
     }
 
-    const nRows = Math.ceil(data.seats.length / 2);
+    const nRows = Math.ceil(data.seatsList.length / 2);
     const rows = [];
     for (var i = 0; i < nRows; i++) {
-      var row = <div />;
-      rows.push(row);
+      const playerDivs = [<div style={{'float': 'left'}}><TablePlayer seatObj={data.seatsList[2*i]} /></div>];
+      if (data.seatsList.length > 2*i) {
+        playerDivs.push(<div style={{'float': 'right'}}><TablePlayer seatObj={data.seatsList[2*i+1]} /></div>);
+      }
+      rows.push(<div>{playerDivs}</div>);
     }
 
     return (
       <div>{rows}</div>
     );
+  }
 }
 
 class TablePlayer extends Component {
   render() {
-    const { error, loaded, data } = this.state;
-    if (error) {
-      return <div>Error { error.message }</div>;
-    } else if (!loaded) {
-      return <div>Loading</div>
-    }
-
-    const nUnrevealed = this.seatObj.poolCount - this.seatObj.poolRevealedCards.length;
+    const nUnrevealed = this.props.seatObj.poolCount - this.props.seatObj.poolRevealedCardsList.length;
     const poolCards = [];
-    for (const cardObj of this.seatObj.poolRevealedCards) {
+    for (const cardObj of this.props.seatObj.poolRevealedCardsList) {
       poolCards.push(<Card cardObj={cardObj} revealed={true} scale={0.5} />);
     }
     for (var i = 0; i < nUnrevealed; i++) {
@@ -78,7 +77,7 @@ class TablePlayer extends Component {
     }
 
     const stacks = [];
-    for (var i = 0; i < Math.ceil(poolCards.length / 10); i++) {
+    for (i = 0; i < Math.ceil(poolCards.length / 10); i++) {
       const stackCards = [];
       for (var j = 10 * i; j < poolCards.length && j < 10 * (i+1); i++) {
         stackCards.push(poolCards[i]);
@@ -86,12 +85,23 @@ class TablePlayer extends Component {
       stacks.push(<CardStack cards={stackCards} scale={0.5} />);
     }
 
-    // TODO: current pack
+    const nPackUnrevealed = this.props.seatObj.currentPackCount - this.props.seatObj.packRevealedCardsList.length;
+    const packCards = [];
+    for (const cardObj of this.props.seatObj.packRevealedCardsList) {
+      packCards.push(<Card cardObj={cardObj} revealed={true} scale={0.5} />);
+    }
+    for (i = 0; i < nPackUnrevealed; i++) {
+      poolCards.push(<Card revealed={false} scale={0.5}/>);
+    }
 
     return (
       <div>
-       <span className="player-pool">{stacks}</span>
-       <span className="player-pack"> </span>
+       <span className="player-pool">
+        {stacks}
+      </span>
+       <span className="player-pack">
+        <CardStack scale={0.5} horizontal={true} cards={poolCards} />
+      </span>
       </div>
     );
   }

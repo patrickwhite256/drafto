@@ -18,7 +18,8 @@ func (s *Server) GetSeat(ctx context.Context, req *drafto.GetSeatReq) (*drafto.G
 	}
 
 	resp := &drafto.GetSeatResp{
-		SeatId: seat.ID,
+		SeatId:  seat.ID,
+		TableId: seat.TableID,
 	}
 
 	if len(seat.PackIDs) > 0 {

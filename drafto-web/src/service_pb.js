@@ -8,6 +8,8 @@
  */
 // GENERATED CODE -- DO NOT EDIT!
 
+/* eslint-disable */
+
 var jspb = require('google-protobuf');
 var goog = jspb;
 var global = Function('return this')();
@@ -1234,7 +1236,7 @@ proto.patrickwhite256.drafto.GetSeatReq.prototype.setSeatId = function(value) {
  * @private {!Array<number>}
  * @const
  */
-proto.patrickwhite256.drafto.GetSeatResp.repeatedFields_ = [3];
+proto.patrickwhite256.drafto.GetSeatResp.repeatedFields_ = [4];
 
 
 
@@ -1268,6 +1270,7 @@ proto.patrickwhite256.drafto.GetSeatResp.prototype.toObject = function(opt_inclu
 proto.patrickwhite256.drafto.GetSeatResp.toObject = function(includeInstance, msg) {
   var f, obj = {
     seatId: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    tableId: jspb.Message.getFieldWithDefault(msg, 2, ""),
     currentPack: (f = msg.getCurrentPack()) && proto.patrickwhite256.drafto.Pack.toObject(includeInstance, f),
     poolList: jspb.Message.toObjectList(msg.getPoolList(),
     proto.patrickwhite256.drafto.Card.toObject, includeInstance)
@@ -1312,11 +1315,15 @@ proto.patrickwhite256.drafto.GetSeatResp.deserializeBinaryFromReader = function(
       msg.setSeatId(value);
       break;
     case 2:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setTableId(value);
+      break;
+    case 3:
       var value = new proto.patrickwhite256.drafto.Pack;
       reader.readMessage(value,proto.patrickwhite256.drafto.Pack.deserializeBinaryFromReader);
       msg.setCurrentPack(value);
       break;
-    case 3:
+    case 4:
       var value = new proto.patrickwhite256.drafto.Card;
       reader.readMessage(value,proto.patrickwhite256.drafto.Card.deserializeBinaryFromReader);
       msg.addPool(value);
@@ -1357,10 +1364,17 @@ proto.patrickwhite256.drafto.GetSeatResp.serializeBinaryToWriter = function(mess
       f
     );
   }
+  f = message.getTableId();
+  if (f.length > 0) {
+    writer.writeString(
+      2,
+      f
+    );
+  }
   f = message.getCurrentPack();
   if (f != null) {
     writer.writeMessage(
-      2,
+      3,
       f,
       proto.patrickwhite256.drafto.Pack.serializeBinaryToWriter
     );
@@ -1368,7 +1382,7 @@ proto.patrickwhite256.drafto.GetSeatResp.serializeBinaryToWriter = function(mess
   f = message.getPoolList();
   if (f.length > 0) {
     writer.writeRepeatedMessage(
-      3,
+      4,
       f,
       proto.patrickwhite256.drafto.Card.serializeBinaryToWriter
     );
@@ -1395,12 +1409,30 @@ proto.patrickwhite256.drafto.GetSeatResp.prototype.setSeatId = function(value) {
 
 
 /**
- * optional Pack current_pack = 2;
+ * optional string table_id = 2;
+ * @return {string}
+ */
+proto.patrickwhite256.drafto.GetSeatResp.prototype.getTableId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 2, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.patrickwhite256.drafto.GetSeatResp} returns this
+ */
+proto.patrickwhite256.drafto.GetSeatResp.prototype.setTableId = function(value) {
+  return jspb.Message.setProto3StringField(this, 2, value);
+};
+
+
+/**
+ * optional Pack current_pack = 3;
  * @return {?proto.patrickwhite256.drafto.Pack}
  */
 proto.patrickwhite256.drafto.GetSeatResp.prototype.getCurrentPack = function() {
   return /** @type{?proto.patrickwhite256.drafto.Pack} */ (
-    jspb.Message.getWrapperField(this, proto.patrickwhite256.drafto.Pack, 2));
+    jspb.Message.getWrapperField(this, proto.patrickwhite256.drafto.Pack, 3));
 };
 
 
@@ -1409,7 +1441,7 @@ proto.patrickwhite256.drafto.GetSeatResp.prototype.getCurrentPack = function() {
  * @return {!proto.patrickwhite256.drafto.GetSeatResp} returns this
 */
 proto.patrickwhite256.drafto.GetSeatResp.prototype.setCurrentPack = function(value) {
-  return jspb.Message.setWrapperField(this, 2, value);
+  return jspb.Message.setWrapperField(this, 3, value);
 };
 
 
@@ -1427,17 +1459,17 @@ proto.patrickwhite256.drafto.GetSeatResp.prototype.clearCurrentPack = function()
  * @return {boolean}
  */
 proto.patrickwhite256.drafto.GetSeatResp.prototype.hasCurrentPack = function() {
-  return jspb.Message.getField(this, 2) != null;
+  return jspb.Message.getField(this, 3) != null;
 };
 
 
 /**
- * repeated Card pool = 3;
+ * repeated Card pool = 4;
  * @return {!Array<!proto.patrickwhite256.drafto.Card>}
  */
 proto.patrickwhite256.drafto.GetSeatResp.prototype.getPoolList = function() {
   return /** @type{!Array<!proto.patrickwhite256.drafto.Card>} */ (
-    jspb.Message.getRepeatedWrapperField(this, proto.patrickwhite256.drafto.Card, 3));
+    jspb.Message.getRepeatedWrapperField(this, proto.patrickwhite256.drafto.Card, 4));
 };
 
 
@@ -1446,7 +1478,7 @@ proto.patrickwhite256.drafto.GetSeatResp.prototype.getPoolList = function() {
  * @return {!proto.patrickwhite256.drafto.GetSeatResp} returns this
 */
 proto.patrickwhite256.drafto.GetSeatResp.prototype.setPoolList = function(value) {
-  return jspb.Message.setRepeatedWrapperField(this, 3, value);
+  return jspb.Message.setRepeatedWrapperField(this, 4, value);
 };
 
 
@@ -1456,7 +1488,7 @@ proto.patrickwhite256.drafto.GetSeatResp.prototype.setPoolList = function(value)
  * @return {!proto.patrickwhite256.drafto.Card}
  */
 proto.patrickwhite256.drafto.GetSeatResp.prototype.addPool = function(opt_value, opt_index) {
-  return jspb.Message.addToRepeatedWrapperField(this, 3, opt_value, proto.patrickwhite256.drafto.Card, opt_index);
+  return jspb.Message.addToRepeatedWrapperField(this, 4, opt_value, proto.patrickwhite256.drafto.Card, opt_index);
 };
 
 

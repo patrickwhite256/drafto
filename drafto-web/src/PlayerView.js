@@ -3,6 +3,7 @@ import API from './Api.js';
 import { GetSeatReq, MakeSelectionReq } from './service_pb.js';
 import Card from './Card.js';
 import CardStack from './CardStack.js';
+import TableView from './TableView.js';
 
 class PlayerView extends Component {
   constructor(props) {
@@ -80,7 +81,17 @@ class PlayerView extends Component {
       }
       pack = <div>Pack: {cards}</div>;
     }
-    return <div>{pack}<div className="cardPool">Pool:<br /><CardStack cards={cards} /></div></div>;
+    return (
+      <div>
+        <div>
+          {pack}
+          <div className="cardPool">
+            Pool:<br /><CardStack cards={cards} />
+          </div>
+        </div>
+        <TableView id={data.tableId} />
+      </div>
+    );
   }
 }
 

@@ -37,6 +37,7 @@ func (s *Server) GetDraftStatus(ctx context.Context, req *drafto.GetDraftStatusR
 				log.Println(err)
 				return nil, twirp.InternalError("error loading pack")
 			}
+			status.Seats[i].CurrentPackCount = int32(len(pack.FoilCardIDs) + len(pack.NonfoilCardIDs))
 
 			packCards := s.loadCards(pack.NonfoilCardIDs, pack.FoilCardIDs)
 			for _, card := range packCards {
