@@ -8,10 +8,10 @@ import (
 
 // replaceNonfoilCardOfRarity replaces the first nonfoil card of rarity `rarity` in
 //   pack `pack` with card `card`. If no card of the appropriate rarity is found, no-op.
-func replaceNonfoilCardOfRarity(pack []*drafto.Card, rarity drafto.Rarity, card *drafto.Card) {
+func replaceNonfoilCardOfRarity(pack []*drafto.Card, rarity drafto.Rarity, replacement *drafto.Card) {
 	for i, card := range pack {
 		if !card.Foil && card.Rarity == rarity {
-			pack[i] = card
+			pack[i] = replacement
 			return
 		}
 	}

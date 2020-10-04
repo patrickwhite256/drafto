@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"math/rand"
+	"strings"
 	"time"
 
 	"github.com/patrickwhite256/drafto/rpc/drafto"
@@ -15,7 +16,7 @@ type packModifier func(set *cardSet, pack []*drafto.Card)
 
 var (
 	setRules = map[string][]packModifier{
-		"ZNR": {znrDFCModifier},
+		"znr": {znrDFCModifier},
 	}
 
 	mythicChangeDate = time.Date(2020, 9, 24, 0, 0, 0, 0, time.UTC)
@@ -74,7 +75,7 @@ func (g *CardLoader) GenerateStandardPack(ctx context.Context, setCode string) (
 	pack = append(pack, set.randomCardsOfRarity(drafto.Rarity_BASIC, 1)[0])
 
 	// apply any set-specific rules
-	for _, mod := range setRules[setCode] {
+	for _, mod := range setRules[strings.ToLower(setCode)] {
 		mod(set, pack)
 	}
 

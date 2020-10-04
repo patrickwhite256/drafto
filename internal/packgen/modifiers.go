@@ -6,8 +6,6 @@ import (
 	"github.com/patrickwhite256/drafto/rpc/drafto"
 )
 
-// TODO: BUG: this can generate multiple dfcs per pack
-
 // znrDFCModifier enforces that a pack has exactly one nonfoil DFC.
 // - if the pack already has exactly one DFC, nothing will happen.
 // - if the pack has more than one nonfoil DFC, the highest-rarity nonfoil DFC will be kept and the others will be replaced with equivalent-rarity non-DFCs
