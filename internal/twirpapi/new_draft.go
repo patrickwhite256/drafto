@@ -10,7 +10,7 @@ import (
 )
 
 func (s *Server) NewDraft(ctx context.Context, req *drafto.NewDraftReq) (*drafto.NewDraftResp, error) {
-	table, err := s.Datastore.NewTable(ctx, 8, req.SetCode)
+	table, err := s.Datastore.NewTable(ctx, int(req.PlayerCount), req.SetCode)
 	if err != nil {
 		log.Println(err)
 		return nil, twirp.InternalError("error starting draft")

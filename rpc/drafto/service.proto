@@ -48,6 +48,7 @@ message Card {
 
 message NewDraftReq {
   string set_code = 1;
+  int32 player_count = 2;
 }
 
 message NewDraftResp {

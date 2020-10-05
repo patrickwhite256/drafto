@@ -816,7 +816,8 @@ proto.patrickwhite256.drafto.NewDraftReq.prototype.toObject = function(opt_inclu
  */
 proto.patrickwhite256.drafto.NewDraftReq.toObject = function(includeInstance, msg) {
   var f, obj = {
-    setCode: jspb.Message.getFieldWithDefault(msg, 1, "")
+    setCode: jspb.Message.getFieldWithDefault(msg, 1, ""),
+    playerCount: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -857,6 +858,10 @@ proto.patrickwhite256.drafto.NewDraftReq.deserializeBinaryFromReader = function(
       var value = /** @type {string} */ (reader.readString());
       msg.setSetCode(value);
       break;
+    case 2:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setPlayerCount(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -893,6 +898,13 @@ proto.patrickwhite256.drafto.NewDraftReq.serializeBinaryToWriter = function(mess
       f
     );
   }
+  f = message.getPlayerCount();
+  if (f !== 0) {
+    writer.writeInt32(
+      2,
+      f
+    );
+  }
 };
 
 
@@ -911,6 +923,24 @@ proto.patrickwhite256.drafto.NewDraftReq.prototype.getSetCode = function() {
  */
 proto.patrickwhite256.drafto.NewDraftReq.prototype.setSetCode = function(value) {
   return jspb.Message.setProto3StringField(this, 1, value);
+};
+
+
+/**
+ * optional int32 player_count = 2;
+ * @return {number}
+ */
+proto.patrickwhite256.drafto.NewDraftReq.prototype.getPlayerCount = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.patrickwhite256.drafto.NewDraftReq} returns this
+ */
+proto.patrickwhite256.drafto.NewDraftReq.prototype.setPlayerCount = function(value) {
+  return jspb.Message.setProto3IntField(this, 2, value);
 };
 
 
