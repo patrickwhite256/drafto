@@ -53,7 +53,7 @@ class TableView extends Component {
     const rows = [];
     for (var i = 0; i < nRows; i++) {
       const playerDivs = [<div style={{'float': 'left'}}><TablePlayer playerN={2*i+1} seatObj={data.seatsList[2*i]} /></div>];
-      if (data.seatsList.length > 2*i) {
+      if (data.seatsList.length > 2*i + 1) {
         playerDivs.push(<div style={{'float': 'right'}}><TablePlayer playerN={2*i+2} seatObj={data.seatsList[2*i+1]} /></div>);
       }
       rows.push(<div>{playerDivs}<div style={{clear:'both'}} /></div>);
