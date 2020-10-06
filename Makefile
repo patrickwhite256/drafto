@@ -6,7 +6,7 @@ generate:
 	protoc --js_out=import_style=commonjs,binary:. --proto_path=. --twirp_js_out=. ./rpc/drafto/service.proto
 
 dev:
-	AWS_REGION=us-west-2 HTTP_PORT=8000 go run ./cmd/server/...
+	HOST=http://localhost:8000 AWS_REGION=us-west-2 HTTP_PORT=8000 go run ./cmd/server/...
 
 build:
 	cd drafto-web && npm run-script build

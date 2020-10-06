@@ -9,6 +9,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/patrickwhite256/drafto/internal/auth"
 	"github.com/patrickwhite256/drafto/internal/datastore"
 	"github.com/patrickwhite256/drafto/internal/packgen"
 	"github.com/patrickwhite256/drafto/internal/twirpapi"
@@ -34,6 +35,14 @@ func main() {
 		log.Printf("preloaded %s\n", set)
 	}
 
+	auther := auth.New(auth.Config{
+		Datastore:     ds,
+		DiscordKey:    os.Getenv("DISCORD_KEY"),
+		DiscordSecret: os.Getenv("DISCORD_SECRET"),
+		SessionSecret: os.Getenv("SESSION_SECRET"),
+		Host:          os.Getenv("HOST"),
+	})
+
 	handler := drafto.NewDraftoServer(&twirpapi.Server{
 		Datastore:  ds,
 		CardLoader: loader,
@@ -43,6 +52,9 @@ func main() {
 
 	mux.Handle(handler.PathPrefix(), handler)
 	mux.Handle("/", http.StripPrefix("/", http.HandlerFunc(staticHandler)))
+	mux.Handle("/auth", auther.AuthHandler())
+	mux.Handle("/auth/discord/callback", auther.CallbackHandler())
+	mux.Handle("/test", auther.Middleware(http.HandlerFunc(authTest)))
 
 	log.Println("starting server...")
 	http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("HTTP_PORT")), mux)
@@ -69,4 +81,8 @@ func staticHandler(rw http.ResponseWriter, req *http.Request) {
 	if _, err := rw.Write(b); err != nil {
 		log.Println("error writing response", err)
 	}
+}
+
+func authTest(rw http.ResponseWriter, req *http.Request) {
+	rw.Write([]byte(fmt.Sprintf("userid: %s", auth.UserID(req.Context()))))
 }

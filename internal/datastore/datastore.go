@@ -23,13 +23,24 @@ const (
 	CardNotInPack dErr = "card not in pack"
 	NotFound      dErr = "not found"
 
+	userTableName  = "drafto-users"
 	tableTableName = "drafto-tables"
 	seatTableName  = "drafto-seats"
 	packTableName  = "drafto-packs"
+
+	userDiscordIndexName = "users-discord-id"
 )
 
 type Datastore struct {
 	ddb *dynamodb.DynamoDB
+}
+
+type User struct {
+	ID        string   `json:"id"`
+	Name      string   `json:"name"`
+	DiscordID string   `json:"discord_id"`
+	AvatarURL string   `json:"avatar_url"`
+	SeatIDs   []string `json:"seat_ids"`
 }
 
 type Table struct {
@@ -42,6 +53,7 @@ type Table struct {
 
 type Seat struct {
 	ID             string   `json:"id"`
+	UserID         string   `json:"user_id"`
 	TableID        string   `json:"table_id"`
 	PackIDs        []string `json:"pack_ids"`
 	NonfoilCardIDs []string `json:"nonfoil_card_ids"`
@@ -63,6 +75,49 @@ func New() (*Datastore, error) {
 	return &Datastore{
 		ddb: dynamodb.New(sess),
 	}, nil
+}
+
+func (d *Datastore) GetUserByDiscordID(ctx context.Context, discordID string) (*User, error) {
+	resp, err := d.ddb.QueryWithContext(ctx, &dynamodb.QueryInput{
+		TableName:                 aws.String(userTableName),
+		IndexName:                 aws.String(userDiscordIndexName),
+		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{":discordid": {S: aws.String(discordID)}},
+		KeyConditionExpression:    aws.String("discord_id = :discordid"),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("error reading from dynamo: %w", err)
+	}
+
+	if len(resp.Items) == 0 {
+		return nil, NotFound
+	}
+
+	user := &User{}
+	if err = dynamodbattribute.UnmarshalMap(resp.Items[0], user); err != nil {
+		return nil, fmt.Errorf("unable to unmarshal user: %w", err)
+	}
+
+	return user, nil
+}
+
+func (d *Datastore) GetUser(ctx context.Context, userID string) (*User, error) {
+	user := &User{}
+	if err := d.loadItem(ctx, userID, userTableName, user); err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (d *Datastore) NewUser(ctx context.Context, discordID, discordName, avatarURL string) (*User, error) {
+	user := &User{
+		ID:        uuid.New().String(),
+		Name:      discordName,
+		DiscordID: discordID,
+		AvatarURL: avatarURL,
+	}
+
+	return user, d.writeItem(ctx, user, userTableName)
 }
 
 // NewTable must generate a table ID and nSeats seat IDs
