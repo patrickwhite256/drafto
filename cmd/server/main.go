@@ -13,6 +13,8 @@ import (
 
 	"github.com/patrickwhite256/drafto/internal/auth"
 	"github.com/patrickwhite256/drafto/internal/datastore"
+	"github.com/patrickwhite256/drafto/internal/discord"
+	"github.com/patrickwhite256/drafto/internal/notifications"
 	"github.com/patrickwhite256/drafto/internal/packgen"
 	"github.com/patrickwhite256/drafto/internal/twirpapi"
 	"github.com/patrickwhite256/drafto/rpc/drafto"
@@ -28,6 +30,14 @@ func main() {
 		log.Println(err)
 		return
 	}
+
+	discord, err := discord.New(os.Getenv("DISCORD_BOT_TOKEN"))
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	notifications := notifications.New(discord, ds)
 
 	loader := &packgen.CardLoader{}
 
@@ -48,8 +58,9 @@ func main() {
 	})
 
 	handler := drafto.NewDraftoServer(&twirpapi.Server{
-		Datastore:  ds,
-		CardLoader: loader,
+		Datastore:     ds,
+		CardLoader:    loader,
+		Notifications: notifications,
 	})
 
 	mux := http.NewServeMux()

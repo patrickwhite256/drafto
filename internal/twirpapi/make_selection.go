@@ -106,3 +106,22 @@ func nextSeatID(table *datastore.Table, seatID string) string {
 
 	return ""
 }
+
+func (s *Server) notifyUser(seatID string) {
+	go func() {
+		seat, err := s.Datastore.GetSeat(context.Background(), seatID)
+		if err != nil {
+			if err == datastore.NotFound {
+				return
+			}
+
+			log.Println("error notifying user: ", err)
+		}
+
+		if seat.UserID == "" {
+			return
+		}
+
+		s.Notifications.NotifyUserOfPendingPick(context.Background(), seat.UserID, seatID)
+	}()
+}
