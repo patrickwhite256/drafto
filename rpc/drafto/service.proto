@@ -9,6 +9,9 @@ service Drafto {
   rpc GetSeat(GetSeatReq) returns (GetSeatResp);
   rpc MakeSelection(MakeSelectionReq) returns (MakeSelectionResp);
   rpc GetDraftStatus(GetDraftStatusReq) returns (GetDraftStatusResp);
+  rpc TakeSeat(TakeSeatReq) returns (TakeSeatResp);
+
+  rpc GetCurrentUser(GetCurrentUserReq) returns (GetCurrentUserResp);
 }
 
 ///
@@ -93,4 +96,23 @@ message SeatData {
   repeated Card pool_revealed_cards = 4;
   repeated Card pack_revealed_cards = 5;
   int32 current_pack_count = 6;
+  string player_name = 8;
+}
+
+message GetCurrentUserReq {
+}
+
+message GetCurrentUserResp {
+  string id = 1;
+  string name = 2;
+  string avatar_url = 3;
+}
+
+message TakeSeatReq {
+  string table_id = 1;
+}
+
+message TakeSeatResp {
+  string table_id = 1;
+  string seat_id = 2;
 }

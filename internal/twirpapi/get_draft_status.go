@@ -6,6 +6,7 @@ import (
 
 	"github.com/twitchtv/twirp"
 
+	"github.com/patrickwhite256/drafto/internal/auth"
 	"github.com/patrickwhite256/drafto/rpc/drafto"
 )
 
@@ -20,6 +21,14 @@ func (s *Server) GetDraftStatus(ctx context.Context, req *drafto.GetDraftStatusR
 		TableId:     req.TableId,
 		CurrentPack: int32(table.CurrentPack),
 		Seats:       make([]*drafto.SeatData, len(table.Seats)),
+	}
+
+	shouldReveal := false
+	for _, seat := range table.Seats {
+		if seat.UserID != "" && auth.UserID(ctx) == seat.UserID {
+			shouldReveal = true
+			continue
+		}
 	}
 
 	for i, seat := range table.Seats {
@@ -39,18 +48,22 @@ func (s *Server) GetDraftStatus(ctx context.Context, req *drafto.GetDraftStatusR
 			}
 			status.Seats[i].CurrentPackCount = int32(len(pack.FoilCardIDs) + len(pack.NonfoilCardIDs))
 
-			packCards := s.loadCards(pack.NonfoilCardIDs, pack.FoilCardIDs)
-			for _, card := range packCards {
-				if card.Dfc {
-					status.Seats[i].PackRevealedCards = append(status.Seats[i].PackRevealedCards, card)
+			if shouldReveal {
+				packCards := s.loadCards(pack.NonfoilCardIDs, pack.FoilCardIDs)
+				for _, card := range packCards {
+					if card.Dfc {
+						status.Seats[i].PackRevealedCards = append(status.Seats[i].PackRevealedCards, card)
+					}
 				}
 			}
 		}
 
 		poolCards := s.loadCards(seat.NonfoilCardIDs, seat.FoilCardIDs)
-		for _, card := range poolCards {
-			if card.Dfc {
-				status.Seats[i].PoolRevealedCards = append(status.Seats[i].PoolRevealedCards, card)
+		if shouldReveal {
+			for _, card := range poolCards {
+				if card.Dfc {
+					status.Seats[i].PoolRevealedCards = append(status.Seats[i].PoolRevealedCards, card)
+				}
 			}
 		}
 	}

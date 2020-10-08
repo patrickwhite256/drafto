@@ -40,7 +40,7 @@ type User struct {
 	Name      string   `json:"name"`
 	DiscordID string   `json:"discord_id"`
 	AvatarURL string   `json:"avatar_url"`
-	SeatIDs   []string `json:"seat_ids"`
+	SeatIDs   []string `json:"seat_ids" dynamodbav:"seat_ids,omitempty"`
 }
 
 type Table struct {
@@ -375,6 +375,28 @@ func (d *Datastore) MovePackToSeat(ctx context.Context, packID, oldSeatID, newSe
 	seat.PackIDs = append(seat.PackIDs, packID)
 
 	return d.writeItem(ctx, seat, seatTableName)
+}
+
+func (d *Datastore) AssignUserToSeat(ctx context.Context, userID, seatID string) error {
+	if _, err := d.ddb.UpdateItemWithContext(ctx, &dynamodb.UpdateItemInput{
+		TableName:                 aws.String(userTableName),
+		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{":sid": {SS: []*string{aws.String(seatID)}}},
+		Key:              map[string]*dynamodb.AttributeValue{"id": {S: aws.String(userID)}},
+		UpdateExpression: aws.String("ADD seat_ids :sid"),
+	}); err != nil {
+		return fmt.Errorf("error adding seat to player: %w", err)
+	}
+
+	if _, err := d.ddb.UpdateItemWithContext(ctx, &dynamodb.UpdateItemInput{
+		TableName:                 aws.String(seatTableName),
+		ExpressionAttributeValues: map[string]*dynamodb.AttributeValue{":uid": {S: aws.String(userID)}},
+		Key:              map[string]*dynamodb.AttributeValue{"id": {S: aws.String(seatID)}},
+		UpdateExpression: aws.String("SET user_id=:uid"),
+	}); err != nil {
+		return fmt.Errorf("error adding player to seat: %w", err)
+	}
+
+	return nil
 }
 
 func (d *Datastore) writeItem(ctx context.Context, item interface{}, tableName string) error {

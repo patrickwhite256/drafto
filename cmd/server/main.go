@@ -3,11 +3,13 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"mime"
 	"net/http"
 	"os"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/patrickwhite256/drafto/internal/auth"
 	"github.com/patrickwhite256/drafto/internal/datastore"
@@ -19,6 +21,8 @@ import (
 var cardSets = []string{"ZNR"}
 
 func main() {
+	rand.Seed(time.Now().UnixNano())
+
 	ds, err := datastore.New()
 	if err != nil {
 		log.Println(err)
@@ -50,11 +54,10 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	mux.Handle(handler.PathPrefix(), handler)
-	mux.Handle("/", http.StripPrefix("/", http.HandlerFunc(staticHandler)))
+	mux.Handle(handler.PathPrefix(), auther.Middleware(handler))
 	mux.Handle("/auth", auther.AuthHandler())
 	mux.Handle("/auth/discord/callback", auther.CallbackHandler())
-	mux.Handle("/test", auther.Middleware(http.HandlerFunc(authTest)))
+	mux.Handle("/", http.StripPrefix("/", http.HandlerFunc(staticHandler)))
 
 	log.Println("starting server...")
 	http.ListenAndServe(fmt.Sprintf(":%s", os.Getenv("HTTP_PORT")), mux)
@@ -62,7 +65,8 @@ func main() {
 
 func staticHandler(rw http.ResponseWriter, req *http.Request) {
 	srvPath := req.URL.Path
-	if srvPath == "" || strings.HasPrefix(srvPath, "player") {
+	// TODO: make the default index?
+	if srvPath == "" || strings.HasPrefix(srvPath, "seat") || strings.HasPrefix(srvPath, "table") {
 		srvPath = "index.html"
 	}
 
@@ -81,8 +85,4 @@ func staticHandler(rw http.ResponseWriter, req *http.Request) {
 	if _, err := rw.Write(b); err != nil {
 		log.Println("error writing response", err)
 	}
-}
-
-func authTest(rw http.ResponseWriter, req *http.Request) {
-	rw.Write([]byte(fmt.Sprintf("userid: %s", auth.UserID(req.Context()))))
 }

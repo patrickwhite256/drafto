@@ -1,21 +1,24 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 import PlayerView from './PlayerView.js';
+import TablePage from './TablePage.js';
+import TopBar from './TopBar.js';
 
 function App() {
   return (
     <Router>
       <div className='App'>
-        <header className='App-header'>
-          
+        <TopBar />
+        <div>
             <Switch>
-              <Route path='/player/:id' component={PlayerView} />
+              <Route path='/seat/:id' component={PlayerView} />
+              <Route path='/table/:id' component={TablePage} />
               <Route path='/'>
-                <Link to='/player/85e70549-2d17-418d-ae8b-8b332df752e6'>whoa</Link>
+                TODO list of your current drafts
               </Route>
             </Switch>
-        </header>
+        </div>
       </div>
     </Router>
   );

@@ -13,8 +13,6 @@ class TableView extends Component {
       loaded: false,
       data: {},
     };
-
-    this.id = props.id;
   }
 
   componentDidMount() {
@@ -23,7 +21,7 @@ class TableView extends Component {
 
   refreshState() {
     const req = new GetDraftStatusReq();
-    req.setTableId(this.id);
+    req.setTableId(this.props.id);
     API.getDraftStatus(req)
       .then(
         (result) => {

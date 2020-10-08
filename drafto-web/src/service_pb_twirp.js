@@ -17,7 +17,9 @@ module.exports.createDraftoClient = function(baseurl, extraHeaders, useJSON) {
         newDraft: function(data) { return rpc("NewDraft", data, pb.NewDraftResp); },
         getSeat: function(data) { return rpc("GetSeat", data, pb.GetSeatResp); },
         makeSelection: function(data) { return rpc("MakeSelection", data, pb.MakeSelectionResp); },
-        getDraftStatus: function(data) { return rpc("GetDraftStatus", data, pb.GetDraftStatusResp); }
+        getDraftStatus: function(data) { return rpc("GetDraftStatus", data, pb.GetDraftStatusResp); },
+        takeSeat: function(data) { return rpc("TakeSeat", data, pb.TakeSeatResp); },
+        getCurrentUser: function(data) { return rpc("GetCurrentUser", data, pb.GetCurrentUserResp); }
     }
 }
 

@@ -9,7 +9,6 @@ class PlayerView extends Component {
   constructor(props) {
     super(props);
 
-    this.id = props.match.params.id;
     this.state = {
       error: null,
       loaded: false,
@@ -23,7 +22,7 @@ class PlayerView extends Component {
 
   refreshState() {
     const req = new GetSeatReq();
-    req.setSeatId(this.id);
+    req.setSeatId(this.props.match.params.id);
     API.getSeat(req)
       .then(
         (result) => {
@@ -43,7 +42,7 @@ class PlayerView extends Component {
 
   selectCard(cardID) {
     const req = new MakeSelectionReq();
-    req.setSeatId(this.id);
+    req.setSeatId(this.props.match.params.id);
     req.setCardId(cardID);
     this.setState({loaded: false});
     API.makeSelection(req)

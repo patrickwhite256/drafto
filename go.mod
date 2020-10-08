@@ -4,6 +4,7 @@ go 1.15
 
 require (
 	github.com/aws/aws-sdk-go v1.34.32
+	github.com/bwmarrin/discordgo v0.22.0
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-bindata/go-bindata v3.1.2+incompatible
 	github.com/golang/protobuf v1.4.2

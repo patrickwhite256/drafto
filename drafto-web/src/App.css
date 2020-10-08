@@ -46,3 +46,31 @@ body {
   margin-top:5px;
   border: 2px solid black;
 }
+
+.top-bar {
+  color:white;
+  font-size: calc(2px + 2vmin);
+  background-color: black;
+  padding-right: 15px;
+  text-align: right;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.top-bar a {
+  text-transform: uppercase;
+  color:white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.top-bar span {
+  height: 100%;
+  vertical-align: top;
+}
+
+.avatar-img {
+  margin-top:5px;
+  height: calc(2px + 2vmin);
+  border-radius: 50%;
+}

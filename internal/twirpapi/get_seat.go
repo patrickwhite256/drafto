@@ -6,6 +6,7 @@ import (
 
 	"github.com/twitchtv/twirp"
 
+	"github.com/patrickwhite256/drafto/internal/auth"
 	"github.com/patrickwhite256/drafto/internal/datastore"
 	"github.com/patrickwhite256/drafto/rpc/drafto"
 )
@@ -15,6 +16,10 @@ func (s *Server) GetSeat(ctx context.Context, req *drafto.GetSeatReq) (*drafto.G
 	if err != nil {
 		log.Println(err)
 		return nil, twirp.InternalError("error loading seat")
+	}
+
+	if seat.UserID == "" || auth.UserID(ctx) != seat.UserID {
+		return nil, twirp.NewError(twirp.PermissionDenied, "This is not your seat!")
 	}
 
 	resp := &drafto.GetSeatResp{
