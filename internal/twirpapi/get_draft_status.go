@@ -66,6 +66,19 @@ func (s *Server) GetDraftStatus(ctx context.Context, req *drafto.GetDraftStatusR
 				}
 			}
 		}
+
+		if seat.UserID == "" {
+			status.Seats[i].PlayerName = "Open Seat"
+			continue
+		}
+
+		user, err := s.Datastore.GetUser(ctx, seat.UserID)
+		if err != nil {
+			log.Println("error getting user for seat: ", err)
+			continue
+		}
+
+		status.Seats[i].PlayerName = user.Name
 	}
 
 	return status, nil

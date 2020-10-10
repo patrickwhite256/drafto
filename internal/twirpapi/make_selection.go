@@ -52,7 +52,9 @@ func (s *Server) MakeSelection(ctx context.Context, req *drafto.MakeSelectionReq
 
 	// if pack's not empty, pass it and return
 	if !pack.Empty() {
-		err = s.Datastore.MovePackToSeat(ctx, packID, req.SeatId, nextSeatID(table, req.SeatId))
+		passSeatID := nextSeatID(table, req.SeatId)
+		s.notifyUser(passSeatID)
+		err = s.Datastore.MovePackToSeat(ctx, packID, req.SeatId, passSeatID)
 		if err != nil {
 			log.Println(err)
 			return nil, twirp.InternalError("error passing pack")
@@ -122,6 +124,8 @@ func (s *Server) notifyUser(seatID string) {
 			return
 		}
 
-		s.Notifications.NotifyUserOfPendingPick(context.Background(), seat.UserID, seatID)
+		if err := s.Notifications.NotifyUserOfPendingPick(context.Background(), seat.UserID, seatID); err != nil {
+			log.Println("error notifying user: ", err)
+		}
 	}()
 }

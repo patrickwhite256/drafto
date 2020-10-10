@@ -50,9 +50,9 @@ class TableView extends Component {
     const nRows = Math.ceil(data.seatsList.length / 2);
     const rows = [];
     for (var i = 0; i < nRows; i++) {
-      const playerDivs = [<div style={{'float': 'left'}}><TablePlayer playerN={2*i+1} seatObj={data.seatsList[2*i]} /></div>];
+      const playerDivs = [<div style={{'float': 'left'}}><TablePlayer seatObj={data.seatsList[2*i]} /></div>];
       if (data.seatsList.length > 2*i + 1) {
-        playerDivs.push(<div style={{'float': 'right'}}><TablePlayer playerN={2*i+2} seatObj={data.seatsList[2*i+1]} /></div>);
+        playerDivs.push(<div style={{'float': 'right'}}><TablePlayer seatObj={data.seatsList[2*i+1]} /></div>);
       }
       rows.push(<div>{playerDivs}<div style={{clear:'both'}} /></div>);
     }
@@ -94,7 +94,7 @@ class TablePlayer extends Component {
 
     return (
       <div className="player-box">
-        <div>Player {this.props.playerN} - Current Packs: {this.props.seatObj.packCount}</div>
+        <div>{this.props.seatObj.playerName} - Current Packs: {this.props.seatObj.packCount}</div>
         <span className="player-pool">
           Pool:<br/>
           {stacks}

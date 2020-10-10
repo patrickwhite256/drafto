@@ -35,6 +35,6 @@ func (d *Discord) SendMessage(ctx context.Context, userID, message string) error
 	if err != nil {
 		return err
 	}
-	_, err = d.sess.ChannelMessageSend(channel.ID, "hello from robot")
+	_, err = d.sess.ChannelMessageSend(channel.ID, message)
 	return err
 }
