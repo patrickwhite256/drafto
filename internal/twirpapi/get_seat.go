@@ -12,14 +12,18 @@ import (
 )
 
 func (s *Server) GetSeat(ctx context.Context, req *drafto.GetSeatReq) (*drafto.GetSeatResp, error) {
+	if auth.UserID(ctx) == "" {
+		return nil, twirp.NewError(twirp.Unauthenticated, "you are not logged in.")
+	}
+
 	seat, err := s.Datastore.GetSeat(ctx, req.SeatId)
 	if err != nil {
 		log.Println(err)
 		return nil, twirp.InternalError("error loading seat")
 	}
 
-	if seat.UserID == "" || auth.UserID(ctx) != seat.UserID {
-		return nil, twirp.NewError(twirp.PermissionDenied, "This is not your seat!")
+	if auth.UserID(ctx) != seat.UserID {
+		return nil, twirp.NewError(twirp.PermissionDenied, "this is not your seat!")
 	}
 
 	resp := &drafto.GetSeatResp{
