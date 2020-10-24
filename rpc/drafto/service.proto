@@ -68,6 +68,7 @@ message GetSeatResp {
   string table_id = 2;
   Pack current_pack = 3;
   repeated Card pool = 4;
+  int32 pack_count = 5;
 }
 
 message MakeSelectionReq {
@@ -106,6 +107,7 @@ message GetCurrentUserResp {
   string id = 1;
   string name = 2;
   string avatar_url = 3;
+  repeated string seat_ids = 4;
 }
 
 message TakeSeatReq {

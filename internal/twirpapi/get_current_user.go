@@ -26,5 +26,6 @@ func (s *Server) GetCurrentUser(ctx context.Context, req *drafto.GetCurrentUserR
 		Id:        user.ID,
 		Name:      user.Name,
 		AvatarUrl: user.AvatarURL,
+		SeatIds:   user.SeatIDs,
 	}, nil
 }

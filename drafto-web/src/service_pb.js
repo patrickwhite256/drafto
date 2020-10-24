@@ -1,4 +1,4 @@
-// source: rpc/drafto/service.proto
+// source: service.proto
 /**
  * @fileoverview
  * @enhanceable
@@ -7,8 +7,6 @@
  * @public
  */
 // GENERATED CODE -- DO NOT EDIT!
-
-/* eslint-disable */
 
 var jspb = require('google-protobuf');
 var goog = jspb;
@@ -294,7 +292,7 @@ if (goog.DEBUG && !COMPILED) {
  * @constructor
  */
 proto.patrickwhite256.drafto.GetCurrentUserResp = function(opt_data) {
-  jspb.Message.initialize(this, opt_data, 0, -1, null, null);
+  jspb.Message.initialize(this, opt_data, 0, -1, proto.patrickwhite256.drafto.GetCurrentUserResp.repeatedFields_, null);
 };
 goog.inherits(proto.patrickwhite256.drafto.GetCurrentUserResp, jspb.Message);
 if (goog.DEBUG && !COMPILED) {
@@ -1391,7 +1389,8 @@ proto.patrickwhite256.drafto.GetSeatResp.toObject = function(includeInstance, ms
     tableId: jspb.Message.getFieldWithDefault(msg, 2, ""),
     currentPack: (f = msg.getCurrentPack()) && proto.patrickwhite256.drafto.Pack.toObject(includeInstance, f),
     poolList: jspb.Message.toObjectList(msg.getPoolList(),
-    proto.patrickwhite256.drafto.Card.toObject, includeInstance)
+    proto.patrickwhite256.drafto.Card.toObject, includeInstance),
+    packCount: jspb.Message.getFieldWithDefault(msg, 5, 0)
   };
 
   if (includeInstance) {
@@ -1445,6 +1444,10 @@ proto.patrickwhite256.drafto.GetSeatResp.deserializeBinaryFromReader = function(
       var value = new proto.patrickwhite256.drafto.Card;
       reader.readMessage(value,proto.patrickwhite256.drafto.Card.deserializeBinaryFromReader);
       msg.addPool(value);
+      break;
+    case 5:
+      var value = /** @type {number} */ (reader.readInt32());
+      msg.setPackCount(value);
       break;
     default:
       reader.skipField();
@@ -1503,6 +1506,13 @@ proto.patrickwhite256.drafto.GetSeatResp.serializeBinaryToWriter = function(mess
       4,
       f,
       proto.patrickwhite256.drafto.Card.serializeBinaryToWriter
+    );
+  }
+  f = message.getPackCount();
+  if (f !== 0) {
+    writer.writeInt32(
+      5,
+      f
     );
   }
 };
@@ -1616,6 +1626,24 @@ proto.patrickwhite256.drafto.GetSeatResp.prototype.addPool = function(opt_value,
  */
 proto.patrickwhite256.drafto.GetSeatResp.prototype.clearPoolList = function() {
   return this.setPoolList([]);
+};
+
+
+/**
+ * optional int32 pack_count = 5;
+ * @return {number}
+ */
+proto.patrickwhite256.drafto.GetSeatResp.prototype.getPackCount = function() {
+  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 5, 0));
+};
+
+
+/**
+ * @param {number} value
+ * @return {!proto.patrickwhite256.drafto.GetSeatResp} returns this
+ */
+proto.patrickwhite256.drafto.GetSeatResp.prototype.setPackCount = function(value) {
+  return jspb.Message.setProto3IntField(this, 5, value);
 };
 
 
@@ -2724,6 +2752,13 @@ proto.patrickwhite256.drafto.GetCurrentUserReq.serializeBinaryToWriter = functio
 
 
 
+/**
+ * List of repeated fields within this message type.
+ * @private {!Array<number>}
+ * @const
+ */
+proto.patrickwhite256.drafto.GetCurrentUserResp.repeatedFields_ = [4];
+
 
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
@@ -2757,7 +2792,8 @@ proto.patrickwhite256.drafto.GetCurrentUserResp.toObject = function(includeInsta
   var f, obj = {
     id: jspb.Message.getFieldWithDefault(msg, 1, ""),
     name: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    avatarUrl: jspb.Message.getFieldWithDefault(msg, 3, "")
+    avatarUrl: jspb.Message.getFieldWithDefault(msg, 3, ""),
+    seatIdsList: (f = jspb.Message.getRepeatedField(msg, 4)) == null ? undefined : f
   };
 
   if (includeInstance) {
@@ -2806,6 +2842,10 @@ proto.patrickwhite256.drafto.GetCurrentUserResp.deserializeBinaryFromReader = fu
       var value = /** @type {string} */ (reader.readString());
       msg.setAvatarUrl(value);
       break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.addSeatIds(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -2853,6 +2893,13 @@ proto.patrickwhite256.drafto.GetCurrentUserResp.serializeBinaryToWriter = functi
   if (f.length > 0) {
     writer.writeString(
       3,
+      f
+    );
+  }
+  f = message.getSeatIdsList();
+  if (f.length > 0) {
+    writer.writeRepeatedString(
+      4,
       f
     );
   }
@@ -2910,6 +2957,43 @@ proto.patrickwhite256.drafto.GetCurrentUserResp.prototype.getAvatarUrl = functio
  */
 proto.patrickwhite256.drafto.GetCurrentUserResp.prototype.setAvatarUrl = function(value) {
   return jspb.Message.setProto3StringField(this, 3, value);
+};
+
+
+/**
+ * repeated string seat_ids = 4;
+ * @return {!Array<string>}
+ */
+proto.patrickwhite256.drafto.GetCurrentUserResp.prototype.getSeatIdsList = function() {
+  return /** @type {!Array<string>} */ (jspb.Message.getRepeatedField(this, 4));
+};
+
+
+/**
+ * @param {!Array<string>} value
+ * @return {!proto.patrickwhite256.drafto.GetCurrentUserResp} returns this
+ */
+proto.patrickwhite256.drafto.GetCurrentUserResp.prototype.setSeatIdsList = function(value) {
+  return jspb.Message.setField(this, 4, value || []);
+};
+
+
+/**
+ * @param {string} value
+ * @param {number=} opt_index
+ * @return {!proto.patrickwhite256.drafto.GetCurrentUserResp} returns this
+ */
+proto.patrickwhite256.drafto.GetCurrentUserResp.prototype.addSeatIds = function(value, opt_index) {
+  return jspb.Message.addToRepeatedField(this, 4, value, opt_index);
+};
+
+
+/**
+ * Clears the list making it empty but non-null.
+ * @return {!proto.patrickwhite256.drafto.GetCurrentUserResp} returns this
+ */
+proto.patrickwhite256.drafto.GetCurrentUserResp.prototype.clearSeatIdsList = function() {
+  return this.setSeatIdsList([]);
 };
 
 

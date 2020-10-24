@@ -27,7 +27,7 @@ For now, this is the plan. Obviously, I'd like there to be more, but this will d
 - [x] Dumb webapp - barely functional
 - [ ] Tighten up API - handle bad input, log errors, etc
 - [ ] Add some dumb bots
-- [ ] Auth with discord
+- [x] Auth with discord
 - [ ] Less dumb webapp
 - [ ] CubeCobra support
 - [ ] Dumb mobile app

@@ -109,3 +109,4 @@ class TablePlayer extends Component {
 }
 
 export default TableView;
+export { TablePlayer };

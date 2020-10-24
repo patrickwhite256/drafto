@@ -45,6 +45,7 @@ func (s *Server) GetSeat(ctx context.Context, req *drafto.GetSeatReq) (*drafto.G
 	}
 
 	resp.Pool = s.loadCards(seat.NonfoilCardIDs, seat.FoilCardIDs)
+	resp.PackCount = int32(len(seat.PackIDs))
 
 	return resp, nil
 }
