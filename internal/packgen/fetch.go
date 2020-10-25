@@ -60,6 +60,7 @@ var basicNames = map[string]struct{}{
 // TODO: load price data for the moneybags bot
 type scryfallCard struct {
 	ID           string             `json:"id"`
+	Set          string             `json:"set"`
 	Name         string             `json:"name"`
 	RarityString string             `json:"rarity"`
 	ImageURIs    map[string]string  `json:"image_uris"`
@@ -167,12 +168,12 @@ func getScryfallPage(url string) (*scryfallSearchResponse, error) {
 
 func (g *CardLoader) loadSet(setCode string) (*cardSet, error) {
 	setCode = strings.ToLower(setCode)
-	if g.standardSets == nil {
-		g.standardSets = map[string]*cardSet{}
+	if g.sets == nil {
+		g.sets = map[string]*cardSet{}
 		g.allCards = map[string]*drafto.Card{}
 	}
 
-	if set, ok := g.standardSets[setCode]; ok {
+	if set, ok := g.sets[setCode]; ok {
 		return set, nil
 	}
 
@@ -204,7 +205,7 @@ func (g *CardLoader) loadSet(setCode string) (*cardSet, error) {
 		time.Sleep(scryfallBackoffTime)
 	}
 
-	g.standardSets[setCode] = set
+	g.sets[setCode] = set
 
 	return set, nil
 }

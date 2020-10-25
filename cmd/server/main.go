@@ -21,8 +21,6 @@ import (
 	"github.com/patrickwhite256/drafto/rpc/drafto"
 )
 
-var cardSets = []string{"ZNR"}
-
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
@@ -44,12 +42,10 @@ func main() {
 
 	loader := &packgen.CardLoader{}
 
-	for _, set := range cardSets {
-		if err := loader.PreloadSet(set); err != nil {
-			log.Println(err)
-			return
-		}
-		log.Printf("preloaded %s\n", set)
+	err = loader.Preload()
+	if err != nil {
+		log.Printf("error preloading card data: %v", err)
+		return
 	}
 
 	auther := auth.New(auth.Config{
