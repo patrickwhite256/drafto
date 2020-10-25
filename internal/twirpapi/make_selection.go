@@ -53,7 +53,7 @@ func (s *Server) MakeSelection(ctx context.Context, req *drafto.MakeSelectionReq
 	// if pack's not empty, pass it and return
 	if !pack.Empty() {
 		passSeatID := nextSeatID(table, req.SeatId)
-		s.notifyUser(passSeatID)
+		s.notify(table.ID, passSeatID)
 		err = s.Datastore.MovePackToSeat(ctx, packID, req.SeatId, passSeatID)
 		if err != nil {
 			log.Println(err)
@@ -109,9 +109,13 @@ func nextSeatID(table *datastore.Table, seatID string) string {
 	return ""
 }
 
-func (s *Server) notifyUser(seatID string) {
+func (s *Server) notify(tableID, seatID string) {
 	go func() {
-		seat, err := s.Datastore.GetSeat(context.Background(), seatID)
+		ctx := context.Background()
+
+		s.Notifications.NotifyTable(ctx, tableID)
+
+		seat, err := s.Datastore.GetSeat(ctx, seatID)
 		if err != nil {
 			if err == datastore.NotFound {
 				return

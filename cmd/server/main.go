@@ -16,6 +16,7 @@ import (
 	"github.com/patrickwhite256/drafto/internal/discord"
 	"github.com/patrickwhite256/drafto/internal/notifications"
 	"github.com/patrickwhite256/drafto/internal/packgen"
+	"github.com/patrickwhite256/drafto/internal/socket"
 	"github.com/patrickwhite256/drafto/internal/twirpapi"
 	"github.com/patrickwhite256/drafto/rpc/drafto"
 )
@@ -37,7 +38,9 @@ func main() {
 		return
 	}
 
-	notifications := notifications.New(discord, ds)
+	socketServer := socket.NewServer()
+
+	notifications := notifications.New(discord, ds, socketServer)
 
 	loader := &packgen.CardLoader{}
 
@@ -68,6 +71,7 @@ func main() {
 	mux.Handle(handler.PathPrefix(), auther.Middleware(handler))
 	mux.Handle("/auth", auther.AuthHandler())
 	mux.Handle("/auth/discord/callback", auther.CallbackHandler())
+	mux.Handle("/ws/", socketServer.Handler())
 	mux.Handle("/", http.StripPrefix("/", http.HandlerFunc(staticHandler)))
 
 	log.Println("starting server...")
