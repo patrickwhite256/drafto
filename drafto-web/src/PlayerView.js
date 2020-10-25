@@ -23,7 +23,7 @@ class PlayerView extends Component {
 
   startListener(tableID) {
     var socketAddr = 'ws://';
-    if (window.location.protocol === "https") {
+    if (window.location.protocol === "https:") {
       socketAddr = 'wss://';
     }
 
