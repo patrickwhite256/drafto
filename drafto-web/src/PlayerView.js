@@ -11,6 +11,7 @@ class PlayerView extends Component {
 
     this.state = {
       error: null,
+      ws: null,
       loaded: false,
       data: {},
     };
@@ -20,7 +21,36 @@ class PlayerView extends Component {
     this.refreshState();
   }
 
+  startListener(tableID) {
+    var socketAddr = 'ws://';
+    if (window.location.protocol === "https") {
+      socketAddr = 'wss://';
+    }
+
+    socketAddr += window.location.host + '/ws/' + tableID;
+
+    var self = this;
+    var ws = new WebSocket(socketAddr);
+    ws.onmessage = function(event) {
+      if (self.state.error || !self.state.loaded) {
+        return
+      }
+
+      self.refreshState();
+    }
+
+    this.setState({ws: ws});
+  }
+
+  componentWillUnmount() {
+    if(this.state.ws) {
+      this.state.ws.close();
+    }
+  }
+
   refreshState() {
+    this.setState({loaded: false});
+
     const req = new GetSeatReq();
     req.setSeatId(this.props.match.params.id);
     API.getSeat(req)
@@ -30,6 +60,10 @@ class PlayerView extends Component {
             loaded: true,
             data: result,
           });
+
+          if(!this.state.ws) {
+            this.startListener(result.tableId);
+          }
         },
         (error) => {
           this.setState({
