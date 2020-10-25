@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	allCardsBulkURL = "https://api.scryfall.com/bulk-data/all-cards"
+	allCardsBulkURL = "https://api.scryfall.com/bulk-data/default-cards"
 	allCardsFile    = "all_cards.json"
 )
 
