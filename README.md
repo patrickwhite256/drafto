@@ -29,6 +29,6 @@ For now, this is the plan. Obviously, I'd like there to be more, but this will d
 - [ ] Add some dumb bots
 - [x] Auth with discord
 - [ ] Less dumb webapp
-- [ ] CubeCobra support
+- [x] CubeCobra support
 - [ ] Dumb mobile app
 - [ ] Mobile notifications

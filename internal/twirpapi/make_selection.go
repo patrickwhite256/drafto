@@ -86,11 +86,15 @@ func (s *Server) MakeSelection(ctx context.Context, req *drafto.MakeSelectionReq
 		return resp, nil
 	}
 
+	if err := s.distributeNewPacks(ctx, table); err != nil {
+		return nil, err
+	}
+
 	if err := s.Datastore.IncrementTableCurrentPack(ctx, table.ID); err != nil {
 		return nil, twirp.InternalError("error finishing draft phase")
 	}
 
-	return resp, s.distributeNewPacks(ctx, table)
+	return resp, nil
 }
 
 // assumption: seatID is at table

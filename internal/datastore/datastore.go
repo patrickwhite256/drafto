@@ -44,11 +44,13 @@ type User struct {
 }
 
 type Table struct {
-	ID          string   `json:"id"`
-	SetCode     string   `json:"set_code"`
-	CurrentPack int      `json:"current_pack"`
-	SeatIDs     []string `json:"seat_ids"`
-	Seats       []*Seat  `json:"-"`
+	ID            string   `json:"id"`
+	SetCode       string   `json:"set_code"`
+	CurrentPack   int      `json:"current_pack"`
+	SeatIDs       []string `json:"seat_ids"`
+	Seats         []*Seat  `json:"-"`
+	DraftMode     int      `json:"draft_mode"`
+	CubeUnusedIDs []string `json:"cube_unused_ids"`
 }
 
 type Seat struct {
@@ -162,6 +164,10 @@ func (d *Datastore) NewTable(ctx context.Context, nSeats int, setCode string) (*
 	}
 
 	return table, nil
+}
+
+func (d *Datastore) WriteTable(ctx context.Context, table *Table) error {
+	return d.writeItem(ctx, table, tableTableName)
 }
 
 func (d *Datastore) IncrementTableCurrentPack(ctx context.Context, tableID string) error {

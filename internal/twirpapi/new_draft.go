@@ -2,10 +2,12 @@ package twirpapi
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/twitchtv/twirp"
 
+	"github.com/patrickwhite256/drafto/internal/packgen"
 	"github.com/patrickwhite256/drafto/rpc/drafto"
 )
 
@@ -16,24 +18,27 @@ func (s *Server) NewDraft(ctx context.Context, req *drafto.NewDraftReq) (*drafto
 		return nil, twirp.InternalError("error starting draft")
 	}
 
-	for i := 0; i < len(table.SeatIDs); i++ {
-		pack, err := s.CardLoader.GenerateStandardPack(ctx, req.GetSetCode())
+	table.DraftMode = int(req.DraftMode)
+
+	// if cube: load cube, make sure count is >= n * 15 * 3
+	if req.DraftMode == drafto.DraftMode_CUBE {
+		cubeCardIDs, err := packgen.LoadCardIDsForCube(ctx, req.CubeId)
 		if err != nil {
 			log.Println(err)
-			return nil, twirp.InternalError("error generating packs")
+			return nil, twirp.NewError(twirp.InvalidArgument, fmt.Sprintf("failed to load cube %s", req.CubeId))
 		}
 
-		packID, err := s.Datastore.NewPack(ctx, pack.Cards)
-		if err != nil {
-			log.Println(err)
-			return nil, twirp.InternalError("error generating packs")
+		minCardCount := int(req.PlayerCount * 45)
+		if len(cubeCardIDs) < minCardCount {
+			return nil, twirp.NewError(twirp.InvalidArgument, fmt.Sprintf("not enough cards in cube %s (need %d)", req.CubeId, minCardCount))
 		}
 
-		err = s.Datastore.MovePackToSeat(ctx, packID, "", table.SeatIDs[i])
-		if err != nil {
-			log.Println(err)
-			return nil, twirp.InternalError("error distributing packs")
-		}
+		// no need to persist this - it will be saved as part of distributeNewPacks
+		table.CubeUnusedIDs = cubeCardIDs
+	}
+
+	if err = s.distributeNewPacks(ctx, table); err != nil {
+		return nil, err
 	}
 
 	return &drafto.NewDraftResp{

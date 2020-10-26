@@ -63,6 +63,7 @@ type scryfallCard struct {
 	Set          string             `json:"set"`
 	Name         string             `json:"name"`
 	RarityString string             `json:"rarity"`
+	Layout       string             `json:"layout"`
 	ImageURIs    map[string]string  `json:"image_uris"`
 	Colours      []string           `json:"colors"`
 	Faces        []scryfallCardFace `json:"card_faces"`
@@ -91,7 +92,7 @@ func (c scryfallCard) toCard() *drafto.Card {
 		Rarity:   c.Rarity(),
 	}
 
-	if len(c.Faces) == 0 {
+	if c.Layout != "transform" && c.Layout != "modal_dfc" {
 		return card
 	}
 

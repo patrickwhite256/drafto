@@ -32,6 +32,11 @@ enum Rarity {
   MYTHIC   = 4;
 }
 
+enum DraftMode {
+  PACK = 0;
+  CUBE = 1;
+}
+
 message Pack {
   string id = 1;
   repeated Card cards = 2;
@@ -52,6 +57,8 @@ message Card {
 message NewDraftReq {
   string set_code = 1;
   int32 player_count = 2;
+  DraftMode draft_mode = 3;
+  string cube_id = 4;
 }
 
 message NewDraftResp {

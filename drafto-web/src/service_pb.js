@@ -14,6 +14,7 @@ var global = Function('return this')();
 
 goog.exportSymbol('proto.patrickwhite256.drafto.Card', null, global);
 goog.exportSymbol('proto.patrickwhite256.drafto.Colour', null, global);
+goog.exportSymbol('proto.patrickwhite256.drafto.DraftMode', null, global);
 goog.exportSymbol('proto.patrickwhite256.drafto.GetCurrentUserReq', null, global);
 goog.exportSymbol('proto.patrickwhite256.drafto.GetCurrentUserResp', null, global);
 goog.exportSymbol('proto.patrickwhite256.drafto.GetDraftStatusReq', null, global);
@@ -903,7 +904,9 @@ proto.patrickwhite256.drafto.NewDraftReq.prototype.toObject = function(opt_inclu
 proto.patrickwhite256.drafto.NewDraftReq.toObject = function(includeInstance, msg) {
   var f, obj = {
     setCode: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    playerCount: jspb.Message.getFieldWithDefault(msg, 2, 0)
+    playerCount: jspb.Message.getFieldWithDefault(msg, 2, 0),
+    draftMode: jspb.Message.getFieldWithDefault(msg, 3, 0),
+    cubeId: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
   if (includeInstance) {
@@ -948,6 +951,14 @@ proto.patrickwhite256.drafto.NewDraftReq.deserializeBinaryFromReader = function(
       var value = /** @type {number} */ (reader.readInt32());
       msg.setPlayerCount(value);
       break;
+    case 3:
+      var value = /** @type {!proto.patrickwhite256.drafto.DraftMode} */ (reader.readEnum());
+      msg.setDraftMode(value);
+      break;
+    case 4:
+      var value = /** @type {string} */ (reader.readString());
+      msg.setCubeId(value);
+      break;
     default:
       reader.skipField();
       break;
@@ -991,6 +1002,20 @@ proto.patrickwhite256.drafto.NewDraftReq.serializeBinaryToWriter = function(mess
       f
     );
   }
+  f = message.getDraftMode();
+  if (f !== 0.0) {
+    writer.writeEnum(
+      3,
+      f
+    );
+  }
+  f = message.getCubeId();
+  if (f.length > 0) {
+    writer.writeString(
+      4,
+      f
+    );
+  }
 };
 
 
@@ -1027,6 +1052,42 @@ proto.patrickwhite256.drafto.NewDraftReq.prototype.getPlayerCount = function() {
  */
 proto.patrickwhite256.drafto.NewDraftReq.prototype.setPlayerCount = function(value) {
   return jspb.Message.setProto3IntField(this, 2, value);
+};
+
+
+/**
+ * optional DraftMode draft_mode = 3;
+ * @return {!proto.patrickwhite256.drafto.DraftMode}
+ */
+proto.patrickwhite256.drafto.NewDraftReq.prototype.getDraftMode = function() {
+  return /** @type {!proto.patrickwhite256.drafto.DraftMode} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
+};
+
+
+/**
+ * @param {!proto.patrickwhite256.drafto.DraftMode} value
+ * @return {!proto.patrickwhite256.drafto.NewDraftReq} returns this
+ */
+proto.patrickwhite256.drafto.NewDraftReq.prototype.setDraftMode = function(value) {
+  return jspb.Message.setProto3EnumField(this, 3, value);
+};
+
+
+/**
+ * optional string cube_id = 4;
+ * @return {string}
+ */
+proto.patrickwhite256.drafto.NewDraftReq.prototype.getCubeId = function() {
+  return /** @type {string} */ (jspb.Message.getFieldWithDefault(this, 4, ""));
+};
+
+
+/**
+ * @param {string} value
+ * @return {!proto.patrickwhite256.drafto.NewDraftReq} returns this
+ */
+proto.patrickwhite256.drafto.NewDraftReq.prototype.setCubeId = function(value) {
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
@@ -3307,6 +3368,14 @@ proto.patrickwhite256.drafto.Rarity = {
   UNCOMMON: 2,
   RARE: 3,
   MYTHIC: 4
+};
+
+/**
+ * @enum {number}
+ */
+proto.patrickwhite256.drafto.DraftMode = {
+  PACK: 0,
+  CUBE: 1
 };
 
 goog.object.extend(exports, proto.patrickwhite256.drafto);

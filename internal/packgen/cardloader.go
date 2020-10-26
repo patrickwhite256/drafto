@@ -12,3 +12,13 @@ type CardLoader struct {
 func (g *CardLoader) CardByID(cardID string) *drafto.Card {
 	return copyOf(g.allCards[cardID])
 }
+
+func (g *CardLoader) CardsByIDs(cardIDs []string) []*drafto.Card {
+	cards := make([]*drafto.Card, len(cardIDs))
+	for i, id := range cardIDs {
+		cards[i] = g.CardByID(id)
+
+	}
+
+	return cards
+}
